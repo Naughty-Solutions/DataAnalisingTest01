@@ -1,0 +1,5 @@
+Problemas para resolver
+    Tratamento de Dados
+    * Erro 1: Renomar Informação -> [Linha 29]
+    * Erro 2: Manipular Horas de Permanência de Clientes -> [Linha 36]
+    * Erro 3: Plotar Gráfico de Média -> [Linha 63 - 68]

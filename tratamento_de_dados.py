@@ -94,6 +94,7 @@ alta = (tabela_sesp[tabela_sesp['DESTINO']=='ALTA'])
 media_alta = alta['DATETIME DELTA'].mean()
 print(f'Média de dias de Internação de PS destino Alta CD: {media_alta}')
 
+#Calculando Media de Dias de Internação Evasão
 evasao = (tabela_sesp[tabela_sesp['DESTINO']=='EVASÃO'])
 media_evasao = evasao['DATETIME DELTA'].mean()
 print(f'Média de dias de Internação de PS destino Evasão CD: {media_evasao}')

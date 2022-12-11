@@ -64,10 +64,11 @@ tabela_sesp['DATETIME SAÍDA PS'] = listSaida
 #Adicionando o valor da listEntrada na Coluna DATETIME ENTRADA PS
 tabela_sesp['DATETIME ENTRADA PS'] = listEntrada
 
-
+#Fazendo a Subtração das datas para saber o tempo medio total
 for saida,entrada in zip(tabela_sesp['DATETIME SAÍDA PS'],tabela_sesp['DATETIME ENTRADA PS']):
     delta = saida - entrada
     listDelta.append(delta)
+#Adicionando os valores da lista na Coluna DATETIME DELTA
 tabela_sesp['DATETIME DELTA'] = listDelta
 
 #Criando Excell Novo para Visualização

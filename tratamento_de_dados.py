@@ -117,12 +117,20 @@ st.markdown(
 labels = 'Altas', 'Evasão', 'Obito'
 sizes = [alta['DESTINO'].count(), evasao['DESTINO'].count(),obito['DESTINO'].count()]
 colors = ['#2E9AFF', '#b80606','white']
+explode = [0.2,0,0]
 fig1, ax1 = plt.subplots()
-ax1.pie(sizes, labels = labels, autopct='%1.1f%%',textprops={'color':"#fafafa", 'font':'sans serif'},colors=colors)
+ax1.pie(sizes,
+labels = labels, 
+autopct='%1.1f%%',
+textprops={'color':"#fafafa", 'font':'sans serif'},
+colors=colors, 
+explode=explode,
+shadow= True
+)
 fig1.set_facecolor("#0e1117")
 st.pyplot(fig1)
 st.markdown(
-    f"## Altas: {alta['DESTINO'].count()} | Evasões: {evasao['DESTINO'].count()} | Obitos: {obito['DESTINO'].count()}"
+    f"## Altas: {alta['DESTINO'].count()} | Evasões: {evasao['DESTINO'].count()} | Obitos: {obito['DESTINO'].count()} | Total de Pacientes: {tabela_sesp['DESTINO'].count()}"
 )
 
 

@@ -73,8 +73,8 @@ for saida,entrada in zip(tabela_sesp['DATETIME SAÍDA PS'],tabela_sesp['DATETIME
 tabela_sesp['DATETIME DELTA'] = listDelta
 
 #Criando Excell Novo para Visualização
-with pd.ExcelWriter("novinho.xlsx") as writer:
-  tabela_sesp.to_excel(writer)
+#with pd.ExcelWriter("novinho.xlsx") as writer:
+#  tabela_sesp.to_excel(writer)
 
 #Calculando Media de Tempo Total:
 mediaDelta = tabela_sesp['DATETIME DELTA'].mean()

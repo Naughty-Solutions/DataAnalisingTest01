@@ -87,12 +87,12 @@ print(media)
 #Calculando Media de Dias de Internação Óbito
 obito = (tabela_sesp[tabela_sesp['DESTINO']=='ÓBITO'])
 print('Média de dias de Internação de PS destino óbito CD:')
-media_obito = obito['DIAS INTERNAÇÃO'].mean()
+media_obito = obito['DATETIME DELTA'].mean()
 print(media_obito)
 
 #Calculando Media de Dias de Internação Alta
 alta = (tabela_sesp[tabela_sesp['DESTINO']=='ALTA'])
-media_alta = alta['DIAS INTERNAÇÃO'].mean()
+media_alta = alta['DATETIME DELTA'].mean()
 print('Média de dias de Internação de PS destino Alta CD:')
 print(media_alta)
 

@@ -130,7 +130,7 @@ shadow= True
 fig1.set_facecolor("#0e1117")
 st.pyplot(fig1)
 st.markdown(
-    f"## Altas: {alta['DESTINO'].count()} | Evasões: {evasao['DESTINO'].count()} | Obitos: {obito['DESTINO'].count()} | Total de Pacientes: {tabela_sesp['DESTINO'].count()}"
+    f"## :heart: Altas: {alta['DESTINO'].count()} | :runner: Evasões: {evasao['DESTINO'].count()} | :skull: Obitos: {obito['DESTINO'].count()} | Total de Pacientes: {tabela_sesp['DESTINO'].count()}"
 )
 
 

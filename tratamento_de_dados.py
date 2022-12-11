@@ -103,16 +103,22 @@ print(f'Média de dias de Internação de PS destino Evasão CD: {media_evasao}'
 #Mostrando Ocorrências de Cada Valor de Destino
 tabala_valores = tabela_sesp['DESTINO'].value_counts()
 
+st.markdown(
+    "# Analise de Dados de uma Planilha em Excel"
+)
+st.markdown(
+    "Analise de dados do Fluxo de Pacientes que percorrem um Pronto Socorro de um Hospital"
+)
 #Mostrando Gráfico de Área de Destino
-
 dataChart = tabala_valores.plot(kind='area')
 st.markdown(
-    "# Grafico de Area"
+    "## Grafico de Area"
 )
 st.area_chart(tabala_valores)
 
+#Grafico de Torta
 st.markdown(
-    "# Porcentagens"
+    "## Porcentagens"
 )
 labels = 'Altas', 'Evasão', 'Obito'
 sizes = [alta['DESTINO'].count(), evasao['DESTINO'].count(),obito['DESTINO'].count()]
@@ -130,7 +136,12 @@ shadow= True
 fig1.set_facecolor("#0e1117")
 st.pyplot(fig1)
 st.markdown(
-    f"## :heart: Altas: {alta['DESTINO'].count()} | :runner: Evasões: {evasao['DESTINO'].count()} |   :skull: Obitos: {obito['DESTINO'].count()} | :hospital: Total de Pacientes: {tabela_sesp['DESTINO'].count()}"
+    f"### :heart: Altas: {alta['DESTINO'].count()} | :runner: Evasões: {evasao['DESTINO'].count()} |   :skull: Obitos: {obito['DESTINO'].count()} | :hospital: Total de Pacientes: {tabela_sesp['DESTINO'].count()}"
+)
+
+probabilidade_Evasao = (evasao['DESTINO'].count() / tabela_sesp['DESTINO'].count())*100
+st.markdown(
+    f"### Probabilidade de ocorrer uma Evasão no PS: {probabilidade_Evasao:.1f}% "
 )
 
 

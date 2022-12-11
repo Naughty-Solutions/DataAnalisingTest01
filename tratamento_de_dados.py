@@ -3,6 +3,7 @@ import datetime
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import streamlit as st
 
 #Importação de Dataset
 tabela_sesp = pd.read_excel('Data_set/plan_Out.xlsx', sheet_name=1, usecols=[1,2,3,4,5,6], )
@@ -104,12 +105,25 @@ tabala_valores = tabela_sesp['DESTINO'].value_counts()
 
 #Mostrando Gráfico de Área de Destino
 
-#tabala_valores.plot(kind='area')
-#plt.show()
+dataChart = tabala_valores.plot(kind='area')
+st.markdown(
+    "# Grafico de Area"
+)
+st.area_chart(tabala_valores)
+
+st.markdown(
+    "# Porcentagens"
+)
+labels = 'Altas', 'Evasão', 'Obito'
+sizes = [alta['DESTINO'].count(), evasao['DESTINO'].count(),obito['DESTINO'].count()]
+
+fig1, ax1 = plt.subplots()
+ax1.pie(sizes, labels = labels, autopct='%1.1f%%')
+st.pyplot(fig1)
 
 #x = ['Média Geral','Média Alta','Média Óbito']
 #y = [media, media_alta, media_obito]
 
 #fig, ax = plt.subplots()
 #x.plot(x,y)
-plt.show()
+#plt.show()

@@ -81,20 +81,22 @@ print(f"Media do tempo Total de Internação: {mediaDelta}")
 
 #Calculando Media de Dias de Internação Geral
 media = tabela_sesp['DIAS INTERNAÇÃO'].mean()
-print('Média de dias de Internação CD:')
-print(media)
+print(f'Média de dias de Internação CD: {media}')
 
 #Calculando Media de Dias de Internação Óbito
 obito = (tabela_sesp[tabela_sesp['DESTINO']=='ÓBITO'])
-print('Média de dias de Internação de PS destino óbito CD:')
 media_obito = obito['DATETIME DELTA'].mean()
-print(media_obito)
+print(f'Média de dias de Internação de PS destino óbito CD: {media_obito}')
+
 
 #Calculando Media de Dias de Internação Alta
 alta = (tabela_sesp[tabela_sesp['DESTINO']=='ALTA'])
 media_alta = alta['DATETIME DELTA'].mean()
-print('Média de dias de Internação de PS destino Alta CD:')
-print(media_alta)
+print(f'Média de dias de Internação de PS destino Alta CD: {media_alta}')
+
+evasao = (tabela_sesp[tabela_sesp['DESTINO']=='EVASÃO'])
+media_evasao = evasao['DATETIME DELTA'].mean()
+print(f'Média de dias de Internação de PS destino Evasão CD: {media_evasao}')
 
 #Mostrando Ocorrências de Cada Valor de Destino
 tabala_valores = tabela_sesp['DESTINO'].value_counts()

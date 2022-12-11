@@ -1,9 +1,11 @@
 #Importação de Bibliotecas
-import pandas as pd
+import datetime
+
 import matplotlib.pyplot as plt
+import pandas as pd
 
 #Importação de Dataset
-tabela_sesp = pd.read_excel('C://Users/lucas/Documents/Analise/Data_set/Planilha_Outubro_2022.xlsx', sheet_name=1, usecols=[1,2,3,4,5,6], )
+tabela_sesp = pd.read_excel('Data_set/plan_Out.xlsx', sheet_name=1, usecols=[1,2,3,4,5,6], )
 
 #Tratamento de Dados
 #Remoção de Informações Nulas
@@ -26,14 +28,55 @@ tabela_sesp = tabela_sesp.loc[4:]
 tabela_sesp['DESTINO'].replace('OBITO', 'ÓBITO', inplace=True)
 tabela_sesp['DESTINO'].replace('EVASAO', 'EVASÃO', inplace=True)
 tabela_sesp['DESTINO'].replace('EVSÃO', 'EVASÃO', inplace=True)
+
 #Erro 01
-#tabela_sesp['DESTINO'].replace(['09:23:00'], 'NÃO DEFINIDO', inplace=True)
+hourError = datetime.time(hour=9, minute=23)
+tabela_sesp['DESTINO'].replace(hourError, 'NÃO DEFINIDO', inplace=True)
+
 
 #Calculando Dias de Internação
 #Adicionando Coluna _DIAS INTERNAÇÃO_
 tabela_sesp['DIAS INTERNAÇÃO'] = tabela_sesp['DATA SAÍDA PS'] - tabela_sesp['DATA ENTRADA PS']
 #Erro 02
-#tabela_sesp['HORA INTERNAÇÃO'] = (tabela_sesp['HORA SAÍDA PS'] - tabela_sesp['HORA ENTRADA PS'])
+
+#Converter Horas em Horas com Dia:
+#Criando as listas auxiliares
+listSaida = []
+listEntrada = []
+listDelta = []
+#Instanciando as colunas com outras para ficar tudo do mesmo tamanho(Tava dando erro sem isso)
+tabela_sesp['DATETIME SAÍDA PS'] = tabela_sesp['HORA SAÍDA PS']
+tabela_sesp['DATETIME ENTRADA PS'] = tabela_sesp['HORA ENTRADA PS']
+tabela_sesp['DATETIME DELTA'] = tabela_sesp['HORA ENTRADA PS'] #Chamei de Delta porque é o nome do tipo que retorna a subtração de datas
+
+#Criando uma Coluna com a Data e Hora de Saida
+for date,time in zip(tabela_sesp['DATA SAÍDA PS'], tabela_sesp['HORA SAÍDA PS']):
+    DateTime = datetime.datetime(date.year, date.month, date.day,time.hour, time.minute)
+    listSaida.append(DateTime)
+
+#Criando uma Coluna com a Data e Hora de Entrada
+for date,time in zip(tabela_sesp['DATA ENTRADA PS'], tabela_sesp['HORA ENTRADA PS']):
+    DateTime = datetime.datetime(date.year, date.month, date.day,time.hour, time.minute)
+    listEntrada.append(DateTime)
+
+#Adicionando o valor da listaSaida na Coluna DATETIME SAIDA PS
+tabela_sesp['DATETIME SAÍDA PS'] = listSaida
+#Adicionando o valor da listEntrada na Coluna DATETIME ENTRADA PS
+tabela_sesp['DATETIME ENTRADA PS'] = listEntrada
+
+
+for saida,entrada in zip(tabela_sesp['DATETIME SAÍDA PS'],tabela_sesp['DATETIME ENTRADA PS']):
+    delta = saida - entrada
+    listDelta.append(delta)
+tabela_sesp['DATETIME DELTA'] = listDelta
+
+#Criando Excell Novo para Visualização
+with pd.ExcelWriter("novinho.xlsx") as writer:
+  tabela_sesp.to_excel(writer)
+
+#Calculando Media de Tempo Total:
+mediaDelta = tabela_sesp['DATETIME DELTA'].mean()
+print(f"Media do tempo Total de Internação: {mediaDelta}")
 
 #Calculando Media de Dias de Internação Geral
 media = tabela_sesp['DIAS INTERNAÇÃO'].mean()
@@ -57,12 +100,12 @@ tabala_valores = tabela_sesp['DESTINO'].value_counts()
 
 #Mostrando Gráfico de Área de Destino
 
-tabala_valores.plot(kind='area')
-plt.show()
+#tabala_valores.plot(kind='area')
+#plt.show()
 
 #x = ['Média Geral','Média Alta','Média Óbito']
 #y = [media, media_alta, media_obito]
 
 #fig, ax = plt.subplots()
-#ax.plot(x,y)
-#plt.show()
+#x.plot(x,y)
+plt.show()

@@ -51,30 +51,27 @@ tabela_sesp['DATETIME ENTRADA PS'] = tabela_sesp['HORA ENTRADA PS']
 tabela_sesp['DATETIME DELTA'] = tabela_sesp['HORA ENTRADA PS'] #Chamei de Delta porque é o nome do tipo que retorna a subtração de datas
 
 #Criando uma Coluna com a Data e Hora de Saida
-for date,time in zip(tabela_sesp['DATA SAÍDA PS'], tabela_sesp['HORA SAÍDA PS']):
-    DateTime = datetime.datetime(date.year, date.month, date.day,time.hour, time.minute)
-    listSaida.append(DateTime)
 
-#Criando uma Coluna com a Data e Hora de Entrada
-for date,time in zip(tabela_sesp['DATA ENTRADA PS'], tabela_sesp['HORA ENTRADA PS']):
-    DateTime = datetime.datetime(date.year, date.month, date.day,time.hour, time.minute)
-    listEntrada.append(DateTime)
+#Função que combina uma coluna de Date com uma coluna de Time, fazendo uma coluna DateTime
+def combineDateTime(listDate, listTime,listDateTime):
+    for date,time in zip(listDate,listTime):
+        DateTime = DateTime = datetime.datetime(date.year, date.month, date.day,time.hour, time.minute)
+        listDateTime.append(DateTime)
+    return listDateTime
 
-#Adicionando o valor da listaSaida na Coluna DATETIME SAIDA PS
-tabela_sesp['DATETIME SAÍDA PS'] = listSaida
-#Adicionando o valor da listEntrada na Coluna DATETIME ENTRADA PS
-tabela_sesp['DATETIME ENTRADA PS'] = listEntrada
+#Criando as Colunas DateTime para fazer os calculos do tempo medio
+tabela_sesp['DATETIME SAÍDA PS'] = combineDateTime(tabela_sesp['DATA SAÍDA PS'],tabela_sesp['HORA SAÍDA PS'],listSaida)
+tabela_sesp['DATETIME ENTRADA PS'] = combineDateTime(tabela_sesp['DATA ENTRADA PS'],tabela_sesp['HORA ENTRADA PS'],listEntrada)
 
-#Fazendo a Subtração das datas para saber o tempo medio total
-for saida,entrada in zip(tabela_sesp['DATETIME SAÍDA PS'],tabela_sesp['DATETIME ENTRADA PS']):
-    delta = saida - entrada
-    listDelta.append(delta)
+#Função que faz a Subtração das datas para saber o tempo medio total
+def CalculationDateTimeDelta(listEntrada,listSaida,listDelta):
+    for entrada,saida in zip(listEntrada,listSaida):
+        delta = saida-entrada
+        listDelta.append(delta)
+    return listDelta
+
 #Adicionando os valores da lista na Coluna DATETIME DELTA
-tabela_sesp['DATETIME DELTA'] = listDelta
-
-#Criando Excell Novo para Visualização
-#with pd.ExcelWriter("novinho.xlsx") as writer:
-#  tabela_sesp.to_excel(writer)
+tabela_sesp['DATETIME DELTA'] = CalculationDateTimeDelta(tabela_sesp['DATETIME ENTRADA PS'],tabela_sesp['DATETIME SAÍDA PS'], listDelta) 
 
 #Calculando Media de Tempo Total:
 mediaDelta = tabela_sesp['DATETIME DELTA'].mean()

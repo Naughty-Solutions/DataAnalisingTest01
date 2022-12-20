@@ -5,8 +5,12 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
 
+#from sqlalchemy import create_engine
+
+#engine = create_engine('sqlite://', echo=False)
+
 #Importação de Dataset
-tabela_sesp = pd.read_excel('Data_set/plan_Out.xlsx', sheet_name=1, usecols=[1,2,3,4,5,6], )
+tabela_sesp = pd.read_excel('Data_set/Plan_Out.xlsx', sheet_name=1, usecols=[1,2,3,4,5,6], )
 
 #Tratamento de Dados
 #Remoção de Informações Nulas
@@ -17,10 +21,20 @@ tabela_sesp = tabela_sesp.dropna(subset=['Unnamed: 3'])
 tabela_sesp = tabela_sesp.rename(columns={'Unnamed: 1': 'NOME PS'})
 tabela_sesp = tabela_sesp.rename(columns={'Unnamed: 2': 'DATA ENTRADA PS'})
 tabela_sesp = tabela_sesp.rename(columns={'Unnamed: 3': 'HORA ENTRADA PS'})
-tabela_sesp = tabela_sesp.rename(columns={'Unnamed: 4': 'DATA SAÍDA PS'})
-tabela_sesp = tabela_sesp.rename(columns={'Unnamed: 5': 'HORA SAÍDA PS'})
+tabela_sesp = tabela_sesp.rename(columns={'Unnamed: 4': 'DATA SAÍDA PS'},)
+tabela_sesp = tabela_sesp.rename(columns={'Unnamed: 5': 'HORA SAÍDA PS'},)
 tabela_sesp = tabela_sesp.rename(columns={'Unnamed: 6': 'DESTINO'})
 
+
+nome_PS = 'NOME PS'
+data_entrada = 'DATA ENTRADA PS'
+hora_entrada = 'HORA ENTRADA PS'
+data_saida = 'DATA SAÍDA PS'
+hora_saida = 'HORA SAÍDA PS'
+destino = 'DESTINO'
+
+#tabela_sesp[hora_saida] = pd.Series(tabela_sesp[hora_saida],index=range(0,5972))
+#print(tabela_sesp[hora_saida].count())
 #Ocultando Linhas inicias
 tabela_sesp = tabela_sesp.loc[4:]
 
@@ -37,8 +51,29 @@ tabela_sesp['DESTINO'].replace(hourError, 'NÃO DEFINIDO', inplace=True)
 
 #Calculando Dias de Internação
 #Adicionando Coluna _DIAS INTERNAÇÃO_
+
+#Esta Função recebo o Dataframe e uma coluna, com a finalidade de percorrer a coluna e consertar os erros
+def eliminating_errors(Dataframe,seriesList):
+    count = 4
+    for value in seriesList:
+        if type(value) == str:
+            print(f"O erro na tabela de Valor: {value} Linha: {count}")
+            print(f"Confirmando o index do erro: {seriesList[count]}")
+            seriesList.replace(seriesList[count],seriesList[count-1],inplace = True)
+            #Dataframe = Dataframe.drop(count)
+            #count += 1
+        count += 1
+    count = 4
+    return Dataframe
+
+#Utilizando a função para eliminar os erros das 4 colunas
+tabela_sesp = eliminating_errors(tabela_sesp,tabela_sesp[hora_saida])
+tabela_sesp = eliminating_errors(tabela_sesp,tabela_sesp[data_saida])
+tabela_sesp = eliminating_errors(tabela_sesp,tabela_sesp[hora_entrada])
+tabela_sesp = eliminating_errors(tabela_sesp,tabela_sesp[data_entrada])
+
 tabela_sesp['DIAS INTERNAÇÃO'] = tabela_sesp['DATA SAÍDA PS'] - tabela_sesp['DATA ENTRADA PS']
-#Erro 02
+
 
 #Converter Horas em Horas com Dia:
 #Criando as listas auxiliares
@@ -99,6 +134,7 @@ print(f'Média de dias de Internação de PS destino Evasão CD: {media_evasao}'
 
 #Mostrando Ocorrências de Cada Valor de Destino
 tabala_valores = tabela_sesp['DESTINO'].value_counts()
+tabela_valores_Entrada = tabela_sesp[data_entrada].value_counts()
 
 st.markdown(
     "# Analise de Dados de uma Planilha em Excel"
@@ -109,21 +145,31 @@ st.markdown(
 #Mostrando Gráfico de Área de Destino
 dataChart = tabala_valores.plot(kind='area')
 st.markdown(
-    "## Grafico de Area"
+    "## Grafico de Area exibindo a quantidade de Altas em relação as Evasões e Altas"
 )
 st.area_chart(tabala_valores)
 
-#Grafico de Torta
+st.markdown(
+    "## Grafico de Area exibindo os dias com mais atendimentos"
+)
+st.area_chart(tabela_valores_Entrada)
+
+#Grafico de Pizza
 st.markdown(
     "## Porcentagens"
 )
+
 labels = 'Altas', 'Evasão', 'Obito'
 sizes = [alta['DESTINO'].count(), evasao['DESTINO'].count(),obito['DESTINO'].count()]
 colors = ['#2E9AFF', '#b80606','white']
 explode = [0.2,0,0]
 fig1, ax1 = plt.subplots()
+
+#ax1.barh(labels,sizes)
+#plt.show()
+#Setando Atributos no Grafico de Pizza
 ax1.pie(sizes,
-labels = labels, 
+labels = labels,
 autopct='%1.1f%%',
 textprops={'color':"#fafafa", 'font':'sans serif'},
 colors=colors, 
@@ -140,7 +186,11 @@ probabilidade_Evasao = (evasao['DESTINO'].count() / tabela_sesp['DESTINO'].count
 st.markdown(
     f"### Probabilidade de ocorrer uma Evasão no PS: {probabilidade_Evasao:.1f}% "
 )
+#Criando Excell Novo para Visualização
+with pd.ExcelWriter("novinho.xlsx") as writer:
+  tabela_sesp.to_excel(writer)
 
+#tabela_sesp.to_sql('pacientes',con=engine)
 
 
 #x = ['Média Geral','Média Alta','Média Óbito']

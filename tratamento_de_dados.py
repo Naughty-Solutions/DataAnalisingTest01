@@ -40,6 +40,7 @@ tabela_sesp = tabela_sesp.loc[4:]
 
 #Tratamento de Dados
 #Renomeando Dados
+
 tabela_sesp['DESTINO'].replace('OBITO', 'ÓBITO', inplace=True)
 tabela_sesp['DESTINO'].replace('EVASAO', 'EVASÃO', inplace=True)
 tabela_sesp['DESTINO'].replace('EVSÃO', 'EVASÃO', inplace=True)

@@ -9,7 +9,7 @@ class DataTreatment:
     table = pd.read_excel('Data_set/Plan_Out.xlsx', sheet_name=1, usecols=[1,2,3,4,5,6], )
 
     table = table.dropna(subset=['Unnamed: 3'])
-    
+
     #Rename Collums
     table = table.rename(columns={'Unnamed: 1': 'NAME PS'})
     table = table.rename(columns={'Unnamed: 2': 'ENTRY DATE PS'})
@@ -34,18 +34,17 @@ class DataTreatment:
     table[destination].replace('EVASAO', 'EVASÃO', inplace=True)
     table[destination].replace('EVSÃO', 'EVASÃO', inplace=True)
 
-    def check_values_destination(seriesDestination):
-        count = 4
+    def check_values_destination(Dataframe,seriesDestination):
+        count = 1
         for value in seriesDestination:
-            # if value != 'OBITO' and value != 'EVASÃO' and value != 'EVASAO' and value != 'ALTA':
-            #      print(f"Valor escrito errado: {value}")
-            #      print(f"Tipo dele: {type(value)}")
             if type(value) != str:
                 print(f"Tem um numero aqui: {value} Linha: {count}")
                 print(f"Confirmando o index do erro: {seriesDestination[count]}")
-                seriesDestination.replace(seriesDestination[count],seriesDestination[count+1])
+                #seriesDestination.replace(seriesDestination[count],seriesDestination[count+1])
                 print(f"Agora ele ta assim: {seriesDestination[count]}")
             count += 1
         count = 4
+        return Dataframe
         
-    check_values_destination(table[destination])
+    table = check_values_destination(table,table[destination])
+    print

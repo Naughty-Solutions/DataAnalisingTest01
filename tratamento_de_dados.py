@@ -10,7 +10,7 @@ import streamlit as st
 #engine = create_engine('sqlite://', echo=False)
 
 #Importação de Dataset
-tabela_sesp = pd.read_excel('Data_set/Plan_Out.xlsx', sheet_name=1, usecols=[1,2,3,4,5,6], )
+tabela_sesp = pd.read_excel('Data_set/Plan_Nov.xlsx', sheet_name=1, usecols=[1,2,3,4,5,6], )
 
 #Tratamento de Dados
 #Remoção de Informações Nulas
@@ -33,6 +33,7 @@ data_saida = 'DATA SAÍDA PS'
 hora_saida = 'HORA SAÍDA PS'
 destino = 'DESTINO'
 
+
 #tabela_sesp[hora_saida] = pd.Series(tabela_sesp[hora_saida],index=range(0,5972))
 #print(tabela_sesp[hora_saida].count())
 #Ocultando Linhas inicias
@@ -45,33 +46,44 @@ tabela_sesp['DESTINO'].replace('OBITO', 'ÓBITO', inplace=True)
 tabela_sesp['DESTINO'].replace('EVASAO', 'EVASÃO', inplace=True)
 tabela_sesp['DESTINO'].replace('EVSÃO', 'EVASÃO', inplace=True)
 
-#Erro 01
-hourError = datetime.time(hour=9, minute=23)
-tabela_sesp['DESTINO'].replace(hourError, 'NÃO DEFINIDO', inplace=True)
+tabela_sesp.reset_index(drop=True,inplace=True)
+
+#Criando Excell Novo para Visualização
+# with pd.ExcelWriter("novinho2.xlsx") as writer:
+#   tabela_sesp.to_excel(writer)
 
 
 #Calculando Dias de Internação
 #Adicionando Coluna _DIAS INTERNAÇÃO_
 
 #Esta Função recebo o Dataframe e uma coluna, com a finalidade de percorrer a coluna e consertar os erros
-def eliminating_errors(Dataframe,seriesList):
-    count = 4
+def eliminating_errors(seriesList):
+    count = 0
     for value in seriesList:
         if type(value) == str:
             print(f"O erro na tabela de Valor: {value} Linha: {count}")
             print(f"Confirmando o index do erro: {seriesList[count]}")
-            seriesList.replace(seriesList[count],seriesList[count-1],inplace = True)
-            #Dataframe = Dataframe.drop(count)
-            #count += 1
+            seriesList.replace(seriesList[count],seriesList[(count-1)],inplace = True)
+            print(f"Como ficou: {seriesList[count]}")
         count += 1
-    count = 4
-    return Dataframe
+
+def check_values_destination(seriesDestination):
+    count = 0
+    for value in seriesDestination:
+        if type(value) != str:
+            print(f"Tem um numero aqui: {value} Linha: {count}")
+            seriesDestination.replace(seriesDestination[count],seriesDestination[count+1],inplace = True)
+            print(f"Agora ele ta assim: {seriesDestination[count]}")
+        count += 1
+
+        
+check_values_destination(tabela_sesp[destino])
 
 #Utilizando a função para eliminar os erros das 4 colunas
-tabela_sesp = eliminating_errors(tabela_sesp,tabela_sesp[hora_saida])
-tabela_sesp = eliminating_errors(tabela_sesp,tabela_sesp[data_saida])
-tabela_sesp = eliminating_errors(tabela_sesp,tabela_sesp[hora_entrada])
-tabela_sesp = eliminating_errors(tabela_sesp,tabela_sesp[data_entrada])
+eliminating_errors(tabela_sesp[hora_saida])
+eliminating_errors(tabela_sesp[data_saida])
+eliminating_errors(tabela_sesp[hora_entrada])
+eliminating_errors(tabela_sesp[data_entrada])
 
 tabela_sesp['DIAS INTERNAÇÃO'] = tabela_sesp['DATA SAÍDA PS'] - tabela_sesp['DATA ENTRADA PS']
 

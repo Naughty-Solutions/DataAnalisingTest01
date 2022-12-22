@@ -10,11 +10,11 @@ import streamlit as st
 #engine = create_engine('sqlite://', echo=False)
 
 #Importação de Dataset
-tabela_sesp = pd.read_excel('Data_set/Plan_Nov.xlsx', sheet_name=1, usecols=[1,2,3,4,5,6], )
+tabela_sesp = pd.read_excel('Data_set/Plan_Nov.xlsx', sheet_name=1, usecols=[1,2,3,4,5,6],skiprows=range(0,4) )
 
 #Tratamento de Dados
 #Remoção de Informações Nulas
-tabela_sesp = tabela_sesp.dropna(subset=['Unnamed: 3'])
+tabela_sesp.dropna(subset=['HORA ENTRADA PS'],inplace=True)
 
 #Tratamento de Dados
 #Troca Renomeando Colunas
@@ -37,7 +37,8 @@ destino = 'DESTINO'
 #tabela_sesp[hora_saida] = pd.Series(tabela_sesp[hora_saida],index=range(0,5972))
 #print(tabela_sesp[hora_saida].count())
 #Ocultando Linhas inicias
-tabela_sesp = tabela_sesp.loc[4:]
+#tabela_sesp = tabela_sesp.loc[4:]
+#tabela_sesp.loc(inplace =True)
 
 #Tratamento de Dados
 #Renomeando Dados

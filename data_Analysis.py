@@ -6,10 +6,18 @@ from data_Treatment import DataTreatment
 
 
 class DataAnalysis():
-    uploaded_file = st.file_uploader("Choose a file")
+    st.markdown(
+        "# Analise de Dados de uma Planilha em Excel"
+    )
+    st.markdown(
+        "Analise de dados do Fluxo de Pacientes que percorrem um Pronto Socorro de um Hospital"
+    )
+    st.markdown(
+        "Envie seu arquivo de planilha LOS para analizarmos"
+        )
+    uploaded_file = st.file_uploader("Insira a tabela do LOS")
     if uploaded_file is not None:
         table = DataTreatment.read_excel_LOS(uploaded_file) 
-        print("To começando...")
         name_PS = 'NAME PS'
         entry_date = 'ENTRY DATE PS'
         entry_hour = 'ENTRY HOUR PS'
@@ -66,16 +74,6 @@ class DataAnalysis():
         table_values = table[destination].value_counts()
         table_values_entry = table[entry_date].value_counts()
 
-
-        st.markdown(
-            "# Analise de Dados de uma Planilha em Excel"
-        )
-        st.markdown(
-            "Analise de dados do Fluxo de Pacientes que percorrem um Pronto Socorro de um Hospital"
-        )
-        st.markdown(
-            "Envie seu arquivo de planilha LOS para analizarmos"
-        )
         #Mostrando Gráfico de Área de Destino
         dataChart = table_values.plot(kind='area')
         

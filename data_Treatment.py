@@ -1,9 +1,5 @@
 import datetime
-
-import matplotlib.pyplot as plt
 import pandas as pd
-import streamlit as st
-
 
 class DataTreatment:
     def read_excel_LOS(path):  
@@ -27,19 +23,14 @@ class DataTreatment:
         SerieDestination.replace('EVASAO', 'EVASÃO', inplace=True)
         SerieDestination.replace('EVSÃO', 'EVASÃO', inplace=True)
 
-    def treatment_all(table):
-        #Defining variables for fa
-        name_PS = 'NAME PS'
-        entry_date = 'ENTRY DATE PS'
-        entry_hour = 'ENTRY HOUR PS'
-        exit_date = 'EXIT DATE PS'
-        exit_hour = 'EXIT HOUR PS'
-        destination = 'DESTINATION'
-
-
-
-
-
+    # def treatment_all(table):
+    #     #Defining variables for fa
+    #     name_PS = 'NAME PS'
+    #     entry_date = 'ENTRY DATE PS'
+    #     entry_hour = 'ENTRY HOUR PS'
+    #     exit_date = 'EXIT DATE PS'
+    #     exit_hour = 'EXIT HOUR PS'
+    #     destination = 'DESTINATION'
 
     def eliminating_errors_date_collums(seriesList):
         count = 0
